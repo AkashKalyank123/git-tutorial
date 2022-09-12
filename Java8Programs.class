@@ -1,0 +1,66 @@
+package com.interviewqueation;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
+
+public class Java8Programs {
+
+	public static void main(String[] args) {
+		
+		List<Employee>empList=new ArrayList<>();
+		empList.add(new Employee(101,"Akash Kalyankar",101,"active",2000));
+		empList.add(new Employee(102,"Rohit Kumar",101,"active",5000));
+		empList.add(new Employee(103,"Rohan shyeety",102,"inactive",6000));
+		empList.add(new Employee(104,"Raddy Raju",102,"inactive",4000));
+		empList.add(new Employee(105,"Shiv Kumar",103,"active",4300));
+		empList.add(new Employee(106,"Ajikay Lakde",103,"inactive",3500));
+		empList.add(new Employee(107,"Vaibhav Kumar",104,"active",3000));
+
+		// write program to print employee details working on each department
+		
+		Map<Integer, List<Employee>> empListBasedOnDept = empList.stream().collect(Collectors.groupingBy(Employee::getDeptId,Collectors.toList()));
+		empListBasedOnDept.entrySet().forEach(e->{
+			System.out.println(e.getKey()+"---"+e.getValue());
+		});
+		
+		
+		//write the program to print employees count working in each department
+		
+		Map<Integer, Long> empCountDept = empList.stream().collect(Collectors.groupingBy(Employee::getDeptId,Collectors.counting()));
+		empCountDept.entrySet().forEach(e->{
+			System.out.println(e.getKey()+"---"+e.getValue());
+		});
+		
+		//write a program to print active and inactive employee in the given collection
+		
+		
+		long empActiveCount = empList.stream().filter(e->"active".equals(e.getStatus())).count();
+		long empInactiveCount = empList.stream().filter(e->"inactive".equals(e.getStatus())).count();
+		
+		System.out.println("Active Emp count:"+ empActiveCount);
+		System.out.println("Inactive emp count:"+ empInactiveCount);
+		
+		
+		//write a program tp print max/min employee salary from the each given collection
+		
+		Optional<Employee> empMaxSalary = empList.stream().max(Comparator.comparing(Employee::getSalary));
+		Optional<Employee>empMinSalary=empList.stream().min(Comparator.comparing(Employee::getSalary));
+		
+		System.out.println("Max Salary of Employee"+ empMaxSalary);
+		System.out.println("Min Salary of Employee"+ empMinSalary);
+		
+		//write a program to print the max salary of a employee from each department
+		Map<Integer, Optional<Employee>> topSalaryEmpDeptwise = empList.stream().collect(Collectors.groupingBy(Employee::getDeptId,
+				Collectors.reducing(BinaryOperator.maxBy(Comparator.comparing(Employee::getSalary)))
+				));
+		topSalaryEmpDeptwise.entrySet().forEach(e->{
+			System.out.println(e.getKey()+"==="+e.getValue());
+		});
+	}
+
+}
