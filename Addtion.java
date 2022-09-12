@@ -3,5 +3,6 @@ class Addition{
 	{
 		int a=10,b2=20;
 		System.out.println(a+b);
+		System.out.print(a*b);
 	}
 }
